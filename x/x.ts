@@ -1,404 +1,6 @@
 import "./styles.css";
 
 ////////////////////////////////////////////////////////
-/////////////////////⚠️PHANTOM EXORCISER ⚠️////////////
-////////////////////////////////////////////////////////
-
-function unconstrained(attribute: string | null) {
-  return attribute;
-}
-
-export const allowedAttributes: any = {
-  abbr: unconstrained,
-  accept: unconstrained,
-  "accept-charset": unconstrained,
-  accesskey: unconstrained,
-  action: unconstrained,
-  align: unconstrained,
-  alt: unconstrained,
-  autocomplete: unconstrained,
-  autosave: unconstrained,
-  axis: unconstrained,
-  bgcolor: unconstrained,
-  border: unconstrained,
-  cellpadding: unconstrained,
-  cellspacing: unconstrained,
-  challenge: unconstrained,
-  char: unconstrained,
-  charoff: unconstrained,
-  charset: unconstrained,
-  checked: unconstrained,
-  cite: unconstrained,
-  class: unconstrained,
-  clear: unconstrained,
-  color: unconstrained,
-  cols: unconstrained,
-  colspan: unconstrained,
-  compact: unconstrained,
-  contenteditable: unconstrained,
-  coords: unconstrained,
-  datetime: unconstrained,
-  dir: unconstrained,
-  disabled: unconstrained,
-  draggable: unconstrained,
-  dropzone: unconstrained,
-  enctype: unconstrained,
-  for: unconstrained,
-  frame: unconstrained,
-  headers: unconstrained,
-  height: unconstrained,
-  high: unconstrained,
-  href: unconstrained,
-  hreflang: unconstrained,
-  hspace: unconstrained,
-  ismap: unconstrained,
-  id: unconstrained,
-  keytype: unconstrained,
-  label: unconstrained,
-  lang: unconstrained,
-  list: unconstrained,
-  longdesc: unconstrained,
-  low: unconstrained,
-  max: unconstrained,
-  maxlength: unconstrained,
-  media: unconstrained,
-  method: unconstrained,
-  min: unconstrained,
-  multiple: unconstrained,
-  name: unconstrained,
-  nohref: unconstrained,
-  noshade: unconstrained,
-  novalidate: unconstrained,
-  nowrap: unconstrained,
-  open: unconstrained,
-  optimum: unconstrained,
-  pattern: unconstrained,
-  placeholder: unconstrained,
-  prompt: unconstrained,
-  pubdate: unconstrained,
-  radiogroup: unconstrained,
-  readonly: unconstrained,
-  rel: unconstrained,
-  required: unconstrained,
-  rev: unconstrained,
-  reversed: unconstrained,
-  rows: unconstrained,
-  rowspan: unconstrained,
-  rules: unconstrained,
-  scope: unconstrained,
-  selected: unconstrained,
-  shape: unconstrained,
-  size: unconstrained,
-  span: unconstrained,
-  spellcheck: unconstrained,
-  src: unconstrained,
-  start: unconstrained,
-  step: unconstrained,
-  style: unconstrained,
-  summary: unconstrained,
-  tabindex: unconstrained,
-  target: unconstrained,
-  title: unconstrained,
-  type: unconstrained,
-  usemap: unconstrained,
-  valign: unconstrained,
-  value: unconstrained,
-  vspace: unconstrained,
-  width: unconstrained,
-  wrap: unconstrained,
-};
-
-export const allowedTags: any = {
-  a: allowedAttributes,
-  abbr: allowedAttributes,
-  acronym: allowedAttributes,
-  address: allowedAttributes,
-  area: allowedAttributes,
-  article: allowedAttributes,
-  aside: allowedAttributes,
-  b: allowedAttributes,
-  bdi: allowedAttributes,
-  big: allowedAttributes,
-  blockquote: allowedAttributes,
-  br: allowedAttributes,
-  button: allowedAttributes,
-  caption: allowedAttributes,
-  center: allowedAttributes,
-  cite: allowedAttributes,
-  code: allowedAttributes,
-  col: allowedAttributes,
-  colgroup: allowedAttributes,
-  data: allowedAttributes,
-  datalist: allowedAttributes,
-  dd: allowedAttributes,
-  del: allowedAttributes,
-  details: allowedAttributes,
-  dfn: allowedAttributes,
-  dir: allowedAttributes,
-  div: allowedAttributes,
-  dl: allowedAttributes,
-  dt: allowedAttributes,
-  em: allowedAttributes,
-  fieldset: allowedAttributes,
-  figcaption: allowedAttributes,
-  figure: allowedAttributes,
-  font: allowedAttributes,
-  footer: allowedAttributes,
-  form: allowedAttributes,
-  h1: allowedAttributes,
-  h2: allowedAttributes,
-  h3: allowedAttributes,
-  h4: allowedAttributes,
-  h5: allowedAttributes,
-  h6: allowedAttributes,
-  header: allowedAttributes,
-  hr: allowedAttributes,
-  i: allowedAttributes,
-  img: allowedAttributes,
-  input: allowedAttributes,
-  ins: allowedAttributes,
-  kbd: allowedAttributes,
-  keygen: allowedAttributes,
-  label: allowedAttributes,
-  legend: allowedAttributes,
-  li: allowedAttributes,
-  main: allowedAttributes,
-  map: allowedAttributes,
-  mark: allowedAttributes,
-  menu: allowedAttributes,
-  menuitem: allowedAttributes,
-  meter: allowedAttributes,
-  nav: allowedAttributes,
-  ol: allowedAttributes,
-  optgroup: allowedAttributes,
-  option: allowedAttributes,
-  output: allowedAttributes,
-  p: allowedAttributes,
-  pre: allowedAttributes,
-  progress: allowedAttributes,
-  q: allowedAttributes,
-  rp: allowedAttributes,
-  rt: allowedAttributes,
-  ruby: allowedAttributes,
-  s: allowedAttributes,
-  samp: allowedAttributes,
-  section: allowedAttributes,
-  select: allowedAttributes,
-  small: allowedAttributes,
-  span: allowedAttributes,
-  strike: allowedAttributes,
-  strong: allowedAttributes,
-  sub: allowedAttributes,
-  summary: allowedAttributes,
-  sup: allowedAttributes,
-  table: allowedAttributes,
-  tbody: allowedAttributes,
-  td: allowedAttributes,
-  textarea: allowedAttributes,
-  tfoot: allowedAttributes,
-  th: allowedAttributes,
-  thead: allowedAttributes,
-  time: allowedAttributes,
-  tr: allowedAttributes,
-  tt: allowedAttributes,
-  u: allowedAttributes,
-  ul: allowedAttributes,
-  var: allowedAttributes,
-  wbr: allowedAttributes,
-};
-
-export const allowedCSS: any = [
-  "background",
-  "background-attachment",
-  "background-clip",
-  "background-color",
-  "background-image",
-  "background-origin",
-  "background-position",
-  "background-repeat",
-  "background-size",
-  "border",
-  "border-bottom",
-  "border-bottom-color",
-  "border-bottom-left-radius",
-  "border-bottom-right-radius",
-  "border-bottom-style",
-  "border-bottom-width",
-  "border-collapse",
-  "border-color",
-  "border-image",
-  "border-image-outset",
-  "border-image-repeat",
-  "border-image-slice",
-  "border-image-source",
-  "border-image-width",
-  "border-left",
-  "border-left-color",
-  "border-left-style",
-  "border-left-width",
-  "border-radius",
-  "border-right",
-  "border-right-color",
-  "border-right-style",
-  "border-right-width",
-  "border-spacing",
-  "border-style",
-  "border-top",
-  "border-top-color",
-  "border-top-left-radius",
-  "border-top-right-radius",
-  "border-top-style",
-  "border-top-width",
-  "border-width",
-  "bottom",
-  "caption-side",
-  "clear",
-  "clip",
-  "color",
-  "content",
-  "counter-increment",
-  "counter-reset",
-  "cursor",
-  "direction",
-  "display",
-  "empty-cells",
-  "float",
-  "font",
-  "font-family",
-  "font-feature-settings",
-  "font-kerning",
-  "font-language-override",
-  "font-size",
-  "font-size-adjust",
-  "font-stretch",
-  "font-style",
-  "font-synthesis",
-  "font-variant",
-  "font-variant-alternates",
-  "font-variant-caps",
-  "font-variant-east-asian",
-  "font-variant-ligatures",
-  "font-variant-numeric",
-  "font-variant-position",
-  "font-weight",
-  "height",
-  "left",
-  "letter-spacing",
-  "line-height",
-  "list-style",
-  "list-style-image",
-  "list-style-position",
-  "list-style-type",
-  "margin",
-  "margin-bottom",
-  "margin-left",
-  "margin-right",
-  "margin-top",
-  "max-height",
-  "max-width",
-  "min-height",
-  "min-width",
-  "opacity",
-  "orphans",
-  "outline",
-  "outline-color",
-  "outline-offset",
-  "outline-style",
-  "outline-width",
-  "overflow",
-  "overflow-wrap",
-  "overflow-x",
-  "overflow-y",
-  "padding",
-  "padding-bottom",
-  "padding-left",
-  "padding-right",
-  "padding-top",
-  "page-break-after",
-  "page-break-before",
-  "page-break-inside",
-  "quotes",
-  "right",
-  "table-layout",
-  "text-align",
-  "text-decoration",
-  "text-decoration-color",
-  "text-decoration-line",
-  "text-decoration-skip",
-  "text-decoration-style",
-  "text-indent",
-  "text-transform",
-  "top",
-  "unicode-bidi",
-  "vertical-align",
-  "visibility",
-  "white-space",
-  "widows",
-  "width",
-  "word-spacing",
-  "z-index",
-];
-
-function exorciseNode(node: any) {
-  const doc = document.implementation.createHTMLDocument();
-
-  const nodeName = node.nodeName.toLowerCase();
-  if (nodeName == "#text") {
-    return node; // let text nodes be
-  }
-  if (nodeName == "#comment") {
-    return doc.createTextNode(""); // let comments die
-  }
-
-  // throw error in case of disallowed nodes
-  if (!allowedTags.hasOwnProperty(nodeName)) {
-    // ain't dealing with this node
-
-    throw new Error(nodeName);
-  }
-
-  const exorcisedNode = doc.createElement(nodeName);
-
-  // re-inject allowed attributes
-  for (
-    let nodeAttributes = 0;
-    nodeAttributes < node.attributes.length;
-    nodeAttributes++
-  ) {
-    const attributeName = node.attributes.item(nodeAttributes)?.name as string;
-    if (allowedTags[nodeName].hasOwnProperty(attributeName)) {
-      const sanitizer = allowedTags[nodeName][attributeName];
-      exorcisedNode.setAttribute(
-        attributeName,
-        sanitizer(node.getAttribute(attributeName)) as string
-      );
-    }
-  }
-
-  // re-inject allowed css
-  for (let css in allowedCSS) {
-    exorcisedNode.style[Number(allowedCSS[css])] =
-      node.style[Number(allowedCSS[css])];
-  }
-
-  // recursively sanitize childNodes
-  while (node.childNodes.length > 0) {
-    const child = node.removeChild(node.childNodes[0]);
-    exorcisedNode.appendChild(exorciseNode(child as HTMLElement));
-  }
-  return exorcisedNode;
-}
-
-export default function phantomExorciser(potentiallyDangerousHTML: string) {
-  const doc = document.implementation.createHTMLDocument();
-
-  const div = doc.createElement("div");
-  div.innerHTML = potentiallyDangerousHTML;
-
-  return (exorciseNode(div) as HTMLElement).innerHTML;
-}
-
-////////////////////////////////////////////////////////
 /////////////////////⚠️PHANTOM CLASS ⚠️/////////////////
 ////////////////////////////////////////////////////////
 
@@ -425,113 +27,109 @@ class PhantomComponent {
 ////////////////////////////////////////////////////////
 /////////////////////⚠️PHANTOM ENGINE ⚠️///////////////
 ////////////////////////////////////////////////////////
-// TODO: rewrite as class
 
 function PHANTOM(Component: any, parent: any = undefined) {
-  ///////////////////// 😈 PHANTOM COMPONENT 😈 //////
-  // create PHANTOM element
+  injectPHANTOMElement();
+
+  const c = new Component();
+
+  if (parent) c.parent = parent;
+
+  c.name = removePhantomPrefixFromName(c);
+
+  const userDefinedState = c.state();
+  c.update(userDefinedState);
+
+  addUserDefinedChildrenToNest(c);
+
+  if (c.nest) {
+    const nestedApparitions = generateNestedApparitions(c);
+    c.update(nestedApparitions);
+  }
+
+  c.appear = () => updateNode(c);
+
+  const userDefinedHTML = c.render();
+  const componentNode = generateNode(userDefinedHTML);
+  if (!parent) document.body.append(componentNode);
+
+  return { [c.name]: c, ...c.nest };
+}
+
+////////////////////////////////////////////////////////
+/////////////////////⚠️UTILITIES ⚠️/////////////////////
+////////////////////////////////////////////////////////
+function injectPHANTOMElement() {
   if (!document.querySelector("#PHANTOM")) {
     const PHANTOM = document.createElement("div");
     PHANTOM.id = "PHANTOM";
     document.body.appendChild(PHANTOM);
   }
-  // where c is an instance of Component,
-  const c = new Component();
-  // set component parent
-  if (parent) c.parent = parent;
-  // remove "Phantom" prefix from name, and set name property
-  const cName = c.constructor.name.replace("Phantom", "");
-  c.name = cName;
-  // run update to set c's properties
-  c.update(c.state());
-  // we create a nest object where we will list c's children
+}
+function removePhantomPrefixFromName(c: any) {
+  return c.constructor.name.replace("Phantom", "");
+}
+function addUserDefinedChildrenToNest(c: any) {
   const nest: any = {};
-  // if user has declared children,
   if (c.children)
-    // for each child, list them in nest.
-    // Obtain instances recursively—PHANTOM(Component) returns an obj
-    // with instances of Component and its children.
     c.children().map((Child: any) => {
       const childInstance = PHANTOM(Child, c);
       for (const [_k, v] of Object.entries(childInstance)) {
         nest[_k] = v;
       }
     });
-  // assign the nest as a public property of c
   c.nest = nest;
-  // create obj that lists children
-  // with their value being appear(), markup
-  // instead of the instance itself.
-  // we call these nested apparitions,
-  // they allows user to render children idiomatically:
-  // <tag>${this.Child}</tag> where Child returns dynamic HTML markup
+}
+function generateNestedApparitions(c: any) {
   const nestedApparitions: any = {};
+  const nest = c.nest;
   for (const [_k] of Object.entries(nest)) {
     const childComponent = nest[_k];
     const childHtml = childComponent.render();
     nestedApparitions[_k] = childHtml;
   }
-  // spread nestedApparitions as properties of c
-  c.update(nestedApparitions);
-
-  function transmutetoHTMLElement(html: string) {
-    html = sanitizeElementMap(html); // sanitize HTML commas
-    let doc = new DOMParser().parseFromString(html, "text/html");
-    return doc.body.firstChild as HTMLElement;
-  }
-
-  function getElementByPhantomId(phantomId: string) {
-    let element: Node | null = null;
-
-    function traverseNode(node: Node) {
-      if (node.childNodes) {
-        node.childNodes.forEach((childNode: ChildNode) => {
-          traverseNode(childNode);
-        });
-      }
-      if ((node as HTMLElement).attributes)
-        for (const [_k, v] of Object.entries(
-          (node as HTMLElement).attributes
-        )) {
-          if (v.name === phantomId) element = node;
-        }
-    }
-
-    traverseNode(document.body);
-
-    return element;
-  }
-
-  function updateNode() {
-    // parse render() as a node
-    let html = c.render();
-    console.log(html);
-    const swapIn = transmutetoHTMLElement(html);
-    console.log(c.name, getElementByPhantomId(`@${c.name.toLowerCase()}`));
-    let swapOut = getElementByPhantomId(`@${c.name.toLowerCase()}`);
-    console.log("SWAPIN:::", swapIn, "SWAPOUT:::", swapOut);
-    swapNode(swapIn as HTMLElement, swapOut);
-  }
-
-  // update node when update() method runs
-  c.appear = () => updateNode();
-
-  if (!parent) document.body.append(transmutetoHTMLElement(c.render()));
-
-  // expose components
-  return { [cName]: c, ...nest };
+  return nestedApparitions;
 }
+function getElementByPhantomId(phantomId: string) {
+  let element: Node | null = null;
 
-////////////////////////////////////////////////////////
-/////////////////////⚠️UTILITIES ⚠️/////////////////////
-////////////////////////////////////////////////////////
+  function traverseNode(node: Node) {
+    if (node.childNodes) {
+      node.childNodes.forEach((childNode: ChildNode) => {
+        traverseNode(childNode);
+      });
+    }
+    if ((node as HTMLElement).attributes)
+      for (const [_k, v] of Object.entries((node as HTMLElement).attributes)) {
+        if (v.name === phantomId) element = node;
+      }
+  }
 
+  traverseNode(document.body);
+
+  return element;
+}
 function swapNode(swapIn: ChildNode, swapOut: ChildNode | null) {
   swapOut?.replaceWith(swapIn);
   return swapIn;
 }
-function sanitizeElementMap(html: string) {
+function parseNodeMap(html: string) {
   return html.replace(/>,/g, ">");
+}
+function updateNode(c: any) {
+  // parse render() as a node
+  let html = c.render();
+  console.log(html);
+  const swapIn = generateNode(html);
+  console.log(c.name, getElementByPhantomId(`@${c.name.toLowerCase()}`));
+  let swapOut = getElementByPhantomId(`@${c.name.toLowerCase()}`);
+  console.log("SWAPIN:::", swapIn, "SWAPOUT:::", swapOut);
+  swapNode(swapIn as HTMLElement, swapOut);
+}
+function generateNode(html: string) {
+  html = parseNodeMap(html); // sanitize HTML commas
+  let doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.firstChild as HTMLElement;
 }
 
 ////////////////////////////////////////////////////////
