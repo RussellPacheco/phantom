@@ -1,9 +1,6 @@
 import "./styles.css";
 
-////////////////////////////////////////////////////////
-/////////////////////⚠️PHANTOM CLASS ⚠️/////////////////
-////////////////////////////////////////////////////////
-
+///////////////////// 🔨 PHANTOMCOMPONENT
 class PhantomComponent {
   [x: string]: unknown;
   data: any;
@@ -24,10 +21,7 @@ class PhantomComponent {
   }
 }
 
-////////////////////////////////////////////////////////
-/////////////////////⚠️PHANTOM ENGINE ⚠️///////////////
-////////////////////////////////////////////////////////
-
+///////////////////// ⚙️ PHANTOM ENGINE
 function PHANTOM(Component: any, parent: any = undefined) {
   injectPHANTOMElement();
 
@@ -56,9 +50,7 @@ function PHANTOM(Component: any, parent: any = undefined) {
   return { [c.name]: c, ...c.nest };
 }
 
-////////////////////////////////////////////////////////
-/////////////////////⚠️UTILITIES ⚠️/////////////////////
-////////////////////////////////////////////////////////
+///////////////////// 🧰 UTILITIES
 function injectPHANTOMElement() {
   if (!document.querySelector("#PHANTOM")) {
     const PHANTOM = document.createElement("div");
@@ -132,13 +124,10 @@ function generateNode(html: string) {
   return doc.body.firstChild as HTMLElement;
 }
 
-////////////////////////////////////////////////////////
-/////////////////////⚠️USER SIDE ⚠️/////////////////////
-////////////////////////////////////////////////////////
-
+///////////////////// 💻 USER SIDE
 class PhantomChild extends PhantomComponent {
   state() {
-    return { message: "💜", hearts: ["💜", "💜", "💜"] };
+    return { message: "💜", hearts: [1, 2, 3] };
   }
   render() {
     return `
@@ -166,7 +155,7 @@ class PhantomApp extends PhantomComponent {
 
 export const { App, Child } = PHANTOM(PhantomApp);
 
-console.log("FINAL COMPONENTS 😈", App, Child);
+console.log("Components 😈:", App, Child);
 
 document.addEventListener("click", toggleEmoji);
 function toggleEmoji() {
