@@ -17,5 +17,5 @@
     "incremental": false,
     "noFallthroughCasesInSwitch": false
   },
-  "include": ["./index.ts"]
+  "include": ["x.ts"]
 }

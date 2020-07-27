@@ -9,7 +9,7 @@ module.exports = {
     open: true,
     stats: "minimal",
   },
-  entry: "./x/index.ts",
+  entry: "./x/x.ts",
   mode: "development",
   resolve: {
     extensions: [".ts", ".js"],
