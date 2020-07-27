@@ -429,13 +429,19 @@ class PhantomComponent {
 
 function PHANTOM(Component: any, parent: any = undefined) {
   ///////////////////// 😈 PHANTOM COMPONENT 😈 //////
+  // create PHANTOM element
+  if (!document.querySelector("#PHANTOM")) {
+    const PHANTOM = document.createElement("div");
+    PHANTOM.id = "PHANTOM";
+    document.body.appendChild(PHANTOM);
+  }
   // where c is an instance of Component,
   const c = new Component();
   // set component parent
   if (parent) c.parent = parent;
-  // remove "Phantom" prefix from name
+  // remove "Phantom" prefix from name, and set name property
   const cName = c.constructor.name.replace("Phantom", "");
-  c.id = cName;
+  c.name = cName;
   // run update to set c's properties
   c.update(c.state());
   // we create a nest object where we will list c's children
@@ -461,25 +467,56 @@ function PHANTOM(Component: any, parent: any = undefined) {
   // <tag>${this.Child}</tag> where Child returns dynamic HTML markup
   const nestedApparitions: any = {};
   for (const [_k] of Object.entries(nest)) {
-    nestedApparitions[_k] = nest[_k].render();
+    const childComponent = nest[_k];
+    const childHtml = childComponent.render();
+    nestedApparitions[_k] = childHtml;
   }
   // spread nestedApparitions as properties of c
   c.update(nestedApparitions);
 
+  function transmutetoHTMLElement(html: string) {
+    html = sanitizeElementMap(html); // sanitize HTML commas
+    let doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.firstChild as HTMLElement;
+  }
+
+  function getElementByPhantomId(phantomId: string) {
+    let element: Node | null = null;
+
+    function traverseNode(node: Node) {
+      if (node.childNodes) {
+        node.childNodes.forEach((childNode: ChildNode) => {
+          traverseNode(childNode);
+        });
+      }
+      if ((node as HTMLElement).attributes)
+        for (const [_k, v] of Object.entries(
+          (node as HTMLElement).attributes
+        )) {
+          if (v.name === phantomId) element = node;
+        }
+    }
+
+    traverseNode(document.body);
+
+    return element;
+  }
+
   function updateNode() {
     // parse render() as a node
     let html = c.render();
-    html = sanitizeElementMap(html); // sanitize HTML commas
-    let doc = new DOMParser().parseFromString(html, "text/html");
-    const swapIn = doc.body.firstChild;
-    (swapIn as HTMLElement).id = c.id;
-    const swapOut = document.getElementById(c.id);
+    console.log(html);
+    const swapIn = transmutetoHTMLElement(html);
+    console.log(c.name, getElementByPhantomId(`@${c.name.toLowerCase()}`));
+    let swapOut = getElementByPhantomId(`@${c.name.toLowerCase()}`);
+    console.log("SWAPIN:::", swapIn, "SWAPOUT:::", swapOut);
     swapNode(swapIn as HTMLElement, swapOut);
   }
 
   // update node when update() method runs
   c.appear = () => updateNode();
-  // inject to body
+
+  if (!parent) document.body.append(transmutetoHTMLElement(c.render()));
 
   // expose components
   return { [cName]: c, ...nest };
@@ -489,10 +526,7 @@ function PHANTOM(Component: any, parent: any = undefined) {
 /////////////////////⚠️UTILITIES ⚠️/////////////////////
 ////////////////////////////////////////////////////////
 
-function swapNode(
-  swapIn: Text | HTMLElement,
-  swapOut: ChildNode | null | undefined
-) {
+function swapNode(swapIn: ChildNode, swapOut: ChildNode | null) {
   swapOut?.replaceWith(swapIn);
   return swapIn;
 }
@@ -510,7 +544,7 @@ class PhantomChild extends PhantomComponent {
   }
   render() {
     return `
-    <div>
+    <div @child>
       ${(this.hearts as string[]).map(() => `<p>${this.message}</p>`)}
     </div>`;
   }
@@ -525,7 +559,7 @@ class PhantomApp extends PhantomComponent {
   }
   render() {
     return `
-    <div>
+    <div @app>
       ${this.Child}
       <p>${this.message}</p>
     </div>`;
