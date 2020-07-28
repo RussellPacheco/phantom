@@ -1,18 +1,29 @@
 import "./styles.css";
 
-///////////////////// 🔨 PHANTOMCOMPONENT
+/** @types 🗜 **/
+type PhantomComponentNest = {
+  [key: string]: PhantomComponent;
+};
+
+type PhantomComponentApparitions = {
+  [key: string]: string;
+};
+
+type PhantomData = { [key: string]: any };
+
+/** @classes 🔨 **/
 class PhantomComponent {
-  [x: string]: unknown;
-  data: any;
-  nest: any;
-  id: any;
+  [x: string]: any;
+  data: PhantomData;
+  id!: string;
+  nest!: PhantomComponentNest | {};
   constructor() {
     this.data = {};
   }
 
-  appear() {}
+  appear() {} /** @shadowed on Phantom **/
 
-  update(data: any) {
+  update(data: PhantomData) {
     for (const [_k, v] of Object.entries(data)) {
       this[_k] = v;
       this.data[_k] = v;
@@ -21,110 +32,108 @@ class PhantomComponent {
   }
 }
 
-///////////////////// ⚙️ PHANTOM ENGINE
-function PHANTOM(Component: any, parent: any = undefined) {
-  injectPHANTOMElement();
-
-  const c = new Component();
-
-  if (parent) c.parent = parent;
-
-  c.name = removePhantomPrefixFromName(c);
-
-  const userDefinedState = c.state();
-  c.update(userDefinedState);
-
-  addUserDefinedChildrenToNest(c);
-
-  if (c.nest) {
-    const nestedApparitions = generateNestedApparitions(c);
-    c.update(nestedApparitions);
-  }
-
-  c.appear = () => updateNode(c);
-
-  const userDefinedHTML = c.render();
-  const componentNode = generateNode(userDefinedHTML);
-  if (!parent) document.body.append(componentNode);
-
-  return { [c.name]: c, ...c.nest };
-}
-
-///////////////////// 🧰 UTILITIES
-function injectPHANTOMElement() {
-  if (!document.querySelector("#PHANTOM")) {
-    const PHANTOM = document.createElement("div");
-    PHANTOM.id = "PHANTOM";
-    document.body.appendChild(PHANTOM);
-  }
-}
-function removePhantomPrefixFromName(c: any) {
-  return c.constructor.name.replace("Phantom", "");
-}
-function addUserDefinedChildrenToNest(c: any) {
-  const nest: any = {};
-  if (c.children)
-    c.children().map((Child: any) => {
-      const childInstance = PHANTOM(Child, c);
-      for (const [_k, v] of Object.entries(childInstance)) {
-        nest[_k] = v;
-      }
-    });
-  c.nest = nest;
-}
-function generateNestedApparitions(c: any) {
-  const nestedApparitions: any = {};
-  const nest = c.nest;
-  for (const [_k] of Object.entries(nest)) {
-    const childComponent = nest[_k];
-    const childHtml = childComponent.render();
-    nestedApparitions[_k] = childHtml;
-  }
-  return nestedApparitions;
-}
-function getElementByPhantomId(phantomId: string) {
-  let element: Node | null = null;
-
-  function traverseNode(node: Node) {
-    if (node.childNodes) {
-      node.childNodes.forEach((childNode: ChildNode) => {
-        traverseNode(childNode);
-      });
+/** @engine ⚙️ **/
+class Phantom {
+  [x: string]: any;
+  constructor(
+    Component: typeof PhantomComponent,
+    Parent: PhantomComponent | null = null
+  ) {
+    const P: Phantom = this;
+    const C: PhantomComponent = new Component();
+    if (Parent) C.parent = Parent;
+    C.name = P.removePhantomPrefixFromName(C);
+    P.userDefinedState = C.state();
+    C.update(P.userDefinedState);
+    P.addUserDefinedChildrenToNest(C);
+    if (C.nest) {
+      P.apparitions = P.generateApparitions(C);
+      C.update(P.apparitions);
     }
-    if ((node as HTMLElement).attributes)
-      for (const [_k, v] of Object.entries((node as HTMLElement).attributes)) {
-        if (v.name === phantomId) element = node;
-      }
+    C.appear = () => P.updateNode(C); /** @shadowing on PhantomComponent **/
+    P.userDefinedHTML = C.render();
+    C.componentNode = P.generateHTMLElement(P.userDefinedHTML);
+    if (!Parent) document.body.prepend(C.componentNode);
+    this.C = C;
   }
 
-  traverseNode(document.body);
+  private removePhantomPrefixFromName(C: PhantomComponent): string {
+    return C.constructor.name.replace("Phantom", "");
+  }
 
-  return element;
-}
-function swapNode(swapIn: ChildNode, swapOut: ChildNode | null) {
-  swapOut?.replaceWith(swapIn);
-  return swapIn;
-}
-function parseNodeMap(html: string) {
-  return html.replace(/>,/g, ">");
-}
-function updateNode(c: any) {
-  // parse render() as a node
-  let html = c.render();
-  console.log(html);
-  const swapIn = generateNode(html);
-  console.log(c.name, getElementByPhantomId(`@${c.name.toLowerCase()}`));
-  let swapOut = getElementByPhantomId(`@${c.name.toLowerCase()}`);
-  console.log("SWAPIN:::", swapIn, "SWAPOUT:::", swapOut);
-  swapNode(swapIn as HTMLElement, swapOut);
-}
-function generateNode(html: string) {
-  html = parseNodeMap(html); // sanitize HTML commas
-  let doc = new DOMParser().parseFromString(html, "text/html");
-  return doc.body.firstChild as HTMLElement;
+  private addUserDefinedChildrenToNest(C: PhantomComponent): void {
+    const nest: PhantomComponentNest = {};
+    if (C.children)
+      C.children().map((Child: typeof PhantomComponent) => {
+        const childInstance: PhantomComponentNest = new Phantom(
+          Child,
+          C
+        ).components();
+        for (const [_k, v] of Object.entries(childInstance)) {
+          nest[_k] = v;
+        }
+      });
+    C.nest = nest;
+  }
+
+  private generateApparitions(
+    C: PhantomComponent
+  ): PhantomComponentApparitions {
+    const apparitions: PhantomComponentApparitions = {};
+    const nest: PhantomComponentNest = C.nest;
+    for (const [_k] of Object.entries(nest)) {
+      const childComponent = nest[_k];
+      const childHtml = childComponent.render();
+      apparitions[_k] = childHtml;
+    }
+    return apparitions;
+  }
+
+  private getElementByPhantomId(phantomId: string): HTMLElement | null {
+    let phantomElement: HTMLElement | null = null;
+    findAndAssignPhantomNode(document.body);
+    return phantomElement;
+    function findAndAssignPhantomNode(node: HTMLElement) {
+      if (node.childNodes) {
+        node.childNodes.forEach((childNode: ChildNode) => {
+          findAndAssignPhantomNode(childNode as HTMLElement);
+        });
+      }
+      if (node.attributes)
+        for (const [_k, v] of Object.entries(node.attributes)) {
+          if (v.name === phantomId) phantomElement = node as HTMLElement;
+        }
+    }
+  }
+
+  private swapNode(swapIn: HTMLElement, swapOut: HTMLElement): HTMLElement {
+    swapOut.replaceWith(swapIn);
+    return swapIn;
+  }
+
+  private cleanNodeArray(html: string): string {
+    return html.replace(/>,/g, ">");
+  }
+
+  private updateNode(C: PhantomComponent): void {
+    let html: string = C.render();
+    const swapIn = this.generateHTMLElement(html);
+    let swapOut = this.getElementByPhantomId(`@${C.name.toLowerCase()}`);
+    if (swapOut) this.swapNode(swapIn, swapOut);
+  }
+
+  private generateHTMLElement(html: string): HTMLElement {
+    html = this.cleanNodeArray(html);
+    let d = new DOMParser().parseFromString(html, "text/html");
+    return d.body.firstChild as HTMLElement;
+  }
+
+  public components(): PhantomComponentNest {
+    return { [this.C.name]: this.C, ...this.C.nest };
+  }
 }
 
-///////////////////// 💻 USER SIDE
+/** @user 💻 **/
 class PhantomChild extends PhantomComponent {
   state() {
     return { message: "💜", hearts: [1, 2, 3] };
@@ -153,7 +162,8 @@ class PhantomApp extends PhantomComponent {
   }
 }
 
-export const { App, Child } = PHANTOM(PhantomApp);
+export const P = new Phantom(PhantomApp);
+const { App, Child } = P.components();
 
 console.log("Components 😈:", App, Child);
 
