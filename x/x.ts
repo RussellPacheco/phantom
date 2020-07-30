@@ -173,12 +173,14 @@ class Phantom {
 /** @component 🔨 user */
 class Kid extends PhantomComponent {
   state() {
-    return { emojis: ["🌺", "👽", "🦠"] };
+    return { pokemonSprites: [] };
   }
   render() {
     return `
     <kid>
-      ${(this.emojis as string[]).map((emoji) => `<p>${emoji}</p>`)}
+      ${(this.pokemonSprites as string[]).map(
+        (sprite) => `<img src=${sprite}>`
+      )}
     </kid>`;
   }
 }
@@ -195,8 +197,9 @@ class App extends PhantomComponent {
     return `
     <app>
       ${this.kid}
-      <p>${this.emoji}</p>
-      <input id="x" type="text">
+      <button>Reverse</button>
+      <button>Fetch</button>
+      <button>Reset</button>
     </app>`;
   }
 }
@@ -205,11 +208,25 @@ export const { app, kid }: Phantoms = new Phantom(App);
 
 console.log("Components 😈:", app, kid);
 
-app.element.onclick = toggleEmoji;
-console.log(app.appear);
+app.element.children[1].onclick = togglePokemon;
+app.element.children[2].onclick = () =>
+  fetchAndSetPokemons([94, 149, 25, 6, 129, 123]);
+app.element.children[3].onclick = () => fetchAndSetPokemons([]);
 
-function toggleEmoji() {
+function togglePokemon() {
   kid.update({
-    emojis: kid.emojis.reverse(),
+    emojis: kid.pokemonSprites.reverse(),
+  });
+}
+
+function fetchAndSetPokemons(pokemonNumbers: number[]) {
+  const pokemonSpritePromises = pokemonNumbers.map(async (num) => {
+    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${num}`);
+    const data = await res.json();
+    return data.sprites.front_default;
+  });
+
+  Promise.all(pokemonSpritePromises).then((pokemonSprites) => {
+    kid.update({ pokemonSprites });
   });
 }
