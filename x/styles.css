@@ -26,13 +26,22 @@ body {
   cursor: grab;
 }
 
-#PHANTOM {
-  user-select: none;
-}
-
 kid {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+@font-face {
+  font-family: "KISS";
+  src: url("./die_nasty.ttf") format("truetype");
+}
+
+:root {
+  --purpleHaze: rgb(119, 0, 255);
+}
+
+button {
+  cursor: pointer;
 }
