@@ -1,4 +1,4 @@
-import { AllowedTags, AllowedCSS } from "./../types/phantomExorciser";
+import { AllowedTags, AllowedCSS } from "../types/phantomExorciser";
 
 /*
 phantomExorciser tag, attrribute, and CSS allowlists
