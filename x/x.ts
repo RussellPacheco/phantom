@@ -1,61 +1,19 @@
 import "./styles.css";
 
-/** @types 🗜 internal */
+/** @type 🗜 internal */
 type PhantomComponentConstructor = {
   new (): PhantomComponent;
 };
-/** @types 🗜 internal */
-type PhantomApparitions = {
-  [key: string]: string;
+/** @type 🗜 internal */
+type Apparitions = {
+  [id: string]: string;
 };
-/** @types 🗜 internal */
+/** @type 🗜 internal */
 type PhantomData = {
-  [key: string]: any;
-};
-/** @types 🗜 internal */
-type PhantomComponentInstance = {
-  children: () => PhantomComponentConstructor[];
-  render: () => string;
-  state: () => PhantomData;
-  update: (data: PhantomData) => void;
-};
-/** @types 🗜 user */
-type Phantoms = {
-  [key: string]: PhantomComponent;
+  [datum: string]: any;
 };
 
-/** @component 🔨 internal */
-class PhantomComponent implements PhantomComponentInstance {
-  [x: string]: any;
-  static DOMElement: HTMLElement;
-  data: PhantomData = {};
-  static id: string;
-  static phantoms: Phantoms = {};
-
-  appear(): void {} /** @shadowed on Phantom */
-
-  children(): PhantomComponentConstructor[] {
-    return []; /** @defined by user */
-  }
-
-  render(): string {
-    return `<shadow/>`; /** @defined by user */
-  }
-
-  state(): PhantomData {
-    return { hibiscus: "🌺" }; /** @defined by user */
-  }
-
-  update(data: PhantomData, PhantomComponentInstance = this): void {
-    for (const [_k, v] of Object.entries(data)) {
-      PhantomComponentInstance[_k] = v;
-      PhantomComponentInstance.data[_k] = v;
-    }
-    PhantomComponentInstance.appear();
-  }
-}
-
-/** @decorator 🌺 */
+/** @decorators 🌺 internal  */
 
 /** @engine ⚙️ */
 class Phantom {
@@ -65,45 +23,46 @@ class Phantom {
   ) {
     const C: PhantomComponent = new PhantomComponentConstructor();
     C.id = Phantom.generateId(C);
-    if (ParentInstance) C.parent = ParentInstance;
+    if (ParentInstance) {
+      C.parent = ParentInstance;
+      C.update(ParentInstance.state());
+    }
+    Phantom.addUserDefinedChildrenToPhantoms(C);
     Phantom.userDefinedState = C.state();
     C.update(Phantom.userDefinedState);
-    Phantom.addUserDefinedChildrenToPhantoms(C);
     if (C.phantoms) {
       Phantom.apparitions = Phantom.generateApparitions(C);
       C.update(Phantom.apparitions);
     }
     C.appear = () =>
       Phantom.updateNode(C); /** @shadowing on PhantomComponent */
-    Phantom.userDefinedHTML = C.render();
-
+    Phantom.userDefinedHTML = C.render(Phantom.apparitions);
     C.DOMElement = Phantom.generateHTMLElement(Phantom.userDefinedHTML);
     if (!ParentInstance) document.body.prepend(C.DOMElement);
-
+    if (C.effects) C.effects(C.phantoms);
     const Phantoms = {
       [C.id]: C,
       ...C.phantoms,
     } as Phantoms;
-
     Phantom.assignComponentElements(Phantoms);
     Phantom.configurePhantomsProperties(Phantoms);
-
     return Phantoms;
   }
 
   [key: string]: any;
   static userDefinedState: PhantomData;
-  static apparitions: PhantomApparitions;
+  static apparitions: Apparitions;
   static userDefinedHTML: string;
 
   private static generateId(C: PhantomComponent): string {
-    return C.constructor.name.toLowerCase();
+    return C.constructor.name;
   }
 
-  private static addUserDefinedChildrenToPhantoms(C: PhantomComponent): void {
+  static addUserDefinedChildrenToPhantoms(C: PhantomComponent): void {
+    const userDefinedChildren = C.children();
     const phantoms: Phantoms = {};
-    if (C.children)
-      C.children().map((Child: PhantomComponentConstructor) => {
+    if (userDefinedChildren)
+      userDefinedChildren.map((Child: PhantomComponentConstructor) => {
         const childPhantoms: Phantoms = new Phantom(Child, C);
         for (const [_k, v] of Object.entries(childPhantoms)) {
           phantoms[_k] = v;
@@ -112,12 +71,12 @@ class Phantom {
     C.phantoms = phantoms;
   }
 
-  private static generateApparitions(C: PhantomComponent): PhantomApparitions {
-    const apparitions: PhantomApparitions = {};
+  private static generateApparitions(C: PhantomComponent): Apparitions {
+    const apparitions: Apparitions = {};
     const phantoms: Phantoms = C.phantoms;
     for (const [_k] of Object.entries(phantoms)) {
       const childComponent = phantoms[_k];
-      const childHtml = childComponent.render();
+      const childHtml = childComponent.render(childComponent.apparitions);
       apparitions[_k] = childHtml;
     }
     return apparitions;
@@ -140,7 +99,7 @@ class Phantom {
   }
 
   private static updateNode(C: PhantomComponent): void {
-    let html: string = C.render();
+    let html: string = C.render(Phantom.apparitions);
     const swapIn = Phantom.generateHTMLElement(html);
     let swapOut = Phantom.getElementByTagName(`${C.id}`);
     if (swapOut) Phantom.swapNode(swapIn, swapOut);
@@ -170,63 +129,100 @@ class Phantom {
   }
 }
 
-/** @component 🔨 user */
-class Kid extends PhantomComponent {
-  state() {
-    return { pokemonSprites: [] };
+/** @type 🗜 phantom provided */
+type Phantoms = {
+  [id: string]: PhantomComponent;
+};
+
+/** @component 🔨 phantom provided */
+class PhantomComponent {
+  [x: string]: any;
+  static DOMElement: HTMLElement;
+  data: PhantomData = {};
+  static id: string;
+  static phantoms: Phantoms = {};
+
+  appear(): void {} /** @shadowed on Phantom */
+
+  effects(_phantoms: Phantoms): void | Promise<any> {}
+
+  children(): PhantomComponentConstructor[] {
+    return []; /** @defined by user */
   }
-  render() {
-    return `
-    <kid>
-      ${(this.pokemonSprites as string[]).map(
-        (sprite) => `<img src=${sprite}>`
-      )}
-    </kid>`;
+
+  render(_Apparitions: Apparitions): string {
+    return `<shadow/>`; /** @defined by user */
+  }
+
+  state(): PhantomData {
+    return { hibiscus: "🌺" }; /** @defined by user */
+  }
+
+  update(data: PhantomData, PhantomComponent = this): void {
+    for (const [_k, v] of Object.entries(data)) {
+      PhantomComponent[_k] = v;
+      PhantomComponent.data[_k] = v;
+    }
+    PhantomComponent.appear();
   }
 }
-/** @component 🔨 user */
-class App extends PhantomComponent {
-  children() {
-    return [Kid];
-  }
-  state() {
-    return { emoji: "🍕" };
-  }
 
-  render() {
-    return `
-    <app>
-      ${this.kid}
-      <button>Reverse</button>
-      <button>Fetch</button>
-      <button>Reset</button>
-    </app>`;
-  }
-}
+/** @decorators 🌺 phantom provided */
 
-export const { app, kid }: Phantoms = new Phantom(App);
-
-console.log("Components 😈:", app, kid);
-
-app.element.children[1].onclick = togglePokemon;
-app.element.children[2].onclick = () =>
-  fetchAndSetPokemons([94, 149, 25, 6, 129, 123]);
-app.element.children[3].onclick = () => fetchAndSetPokemons([]);
-
-function togglePokemon() {
-  kid.update({
-    emojis: kid.pokemonSprites.reverse(),
-  });
-}
-
-function fetchAndSetPokemons(pokemonNumbers: number[]) {
+// POKEMON APP
+/** @methods ⛏ user defined */
+async function fetchPokemons(pokemonNumbers: number[]) {
+  console.log("Method ran");
   const pokemonSpritePromises = pokemonNumbers.map(async (num) => {
     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${num}`);
     const data = await res.json();
     return data.sprites.front_default;
   });
-
-  Promise.all(pokemonSpritePromises).then((pokemonSprites) => {
-    kid.update({ pokemonSprites });
-  });
+  const pokemonSprites = await Promise.all(pokemonSpritePromises);
+  return pokemonSprites;
 }
+/** @component 🔨 user defined */
+class Kid extends PhantomComponent {
+  async effects() {
+    const pokemonSprites = await fetchPokemons([1, 2, 3]);
+    this.update({ pokemonSprites });
+  }
+  state() {
+    const pokemonSprites: string[] = [];
+    return { pokemonSprites };
+  }
+  render() {
+    return `
+    <Kid>
+      ${(this.pokemonSprites as string[]).map(
+        (sprite) => `<img src=${sprite}>`
+      )}
+    </Kid>`;
+  }
+}
+/** @component 🔨 user defined */
+class App extends PhantomComponent {
+  children() {
+    return [Kid];
+  }
+  effects({ Kid }: Phantoms) {
+    const reverseButton = document.getElementById("fetch-button");
+    reverseButton!.onclick = async () => {
+      const pokemonSprites = await fetchPokemons([4, 5, 6]);
+      Kid.update({ pokemonSprites });
+    };
+  }
+  render({ Kid }: Apparitions) {
+    return `
+    <App>
+      ${Kid}
+      <button>Reverse</button>
+      <button id="fetch-button">Fetch</button>
+      <button>Reset</button>
+    </App>`;
+  }
+}
+// POKEMON APP
+
+const PhantomApp = new Phantom(App);
+console.log(PhantomApp);
